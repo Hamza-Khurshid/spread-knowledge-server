@@ -2,6 +2,7 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var cors = require("cors");
+var passport = require('passport');
 
 //import from custom files
 var dbConnection = require ('./config/dbConnection');
@@ -15,9 +16,16 @@ var app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static('uploads'))
 
 //db connection
 dbConnection();
+
+app.use(function(req,res,next){
+  console.log("req is my name",req.originalUrl)
+  require('./services/passport')(passport,app,req.originalUrl)
+
+})
 
 // routes
 app.use("/tutor", tutorRoute);

@@ -1,4 +1,5 @@
 var app = require('express').Router();
+var multer = require("multer")
 var tutorCollection = require('../models/tutorSchema');
 
 app.post('/deleteTutor', (req, res) => {
@@ -57,7 +58,19 @@ app.post('/updateTutor', (req, res) => {
       });
 })
 
-app.post("/addTutor", function(req, res) {
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now()+file.originalname)
+  }
+})
+ 
+var upload = multer({ storage: storage })
+
+app.post("/addTutor",upload.single('imgURL'), function(req, res) {
+  console.log("my image is *****",req.file)
   let tutor = new tutorCollection({ 
     _id: req.body._id,
     tName: req.body.tName,
@@ -65,7 +78,7 @@ app.post("/addTutor", function(req, res) {
     tPassword: req.body.tPassword,
     tPhone: req.body.tPhone,
     tGender: req.body.tGender,
-    imgURL: req.body.imgURL,
+    imgURL: req.file.path.slice(8),
     tCity: req.body.tCity,
     tAddress: req.body.tAddress,
     tAbout: req.body.tAbout,
