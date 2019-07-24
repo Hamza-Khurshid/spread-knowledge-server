@@ -1,8 +1,9 @@
 var app = require('express').Router();
 var multer = require("multer")
 var tutorCollection = require('../models/tutorSchema');
+var findByToken = require('../middlewares/verifytoken');
 
-app.post('/deleteTutor', (req, res) => {
+app.post('/deleteTutor', findByToken, (req, res) => {
   tutorCollection
       .findOneAndDelete({_id: req.body._id})
       .exec(function (err, response) {
@@ -13,7 +14,7 @@ app.post('/deleteTutor', (req, res) => {
       });
 })
 
-app.post('/getTutor', (req, res) => {
+app.post('/getTutor', findByToken, (req, res) => {
   tutorCollection
       .findById(req.body._id)
       .exec(function (err, response) {
@@ -24,7 +25,7 @@ app.post('/getTutor', (req, res) => {
       });
 })
 
-app.post('/updateTutor', (req, res) => {
+app.post('/updateTutor', findByToken, (req, res) => {
   tutorCollection
       .findOneAndUpdate(
         {_id: req.body._id},
@@ -69,7 +70,7 @@ var storage = multer.diskStorage({
  
 var upload = multer({ storage: storage })
 
-app.post("/addTutor",upload.single('imgURL'), function(req, res) {
+app.post("/addTutor", findByToken,upload.single('imgURL'), function(req, res) {
   console.log("my image is *****",req.file)
   let tutor = new tutorCollection({ 
     _id: req.body._id,

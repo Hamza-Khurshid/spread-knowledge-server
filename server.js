@@ -17,6 +17,8 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('uploads'))
+app.use(passport.initialize())
+app.use(passport.session())
 
 //db connection
 dbConnection();
@@ -24,8 +26,10 @@ dbConnection();
 app.use(function(req,res,next){
   console.log("req is my name",req.originalUrl)
   require('./services/passport')(passport,app,req.originalUrl)
-
+  next()
 })
+
+
 
 // routes
 app.use("/tutor", tutorRoute);
