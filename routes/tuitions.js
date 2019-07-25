@@ -1,6 +1,6 @@
 var app = require('express').Router();
 var tuitionCollection = require('../models/tuitionSchema');
-
+var getByToken = require('../middlewares/verifytoken');
 
 app.post('/deleteTuition', (req, res) => {
   tuitionCollection
@@ -48,7 +48,7 @@ app.post('/updateTuition', (req, res) => {
       });
 })
 
-app.post("/addTuition", function(req, res) {
+app.post("/addTuition", getByToken, function(req, res) {
   let tuition = new tuitionCollection({ 
         _id: req.body._id,
         trSenderId: req.body.trSenderId,

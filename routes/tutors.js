@@ -50,10 +50,11 @@ app.post('/updateTutor', findByToken, (req, res) => {
           subject3: req.body.subject3,
           fFrom: req.body.fFrom,
           fTo: req.body.fTo
-        })
+        }, {new: true})
       .exec(function (err, response) {
+        console.log("RES===>", response)
           if (err) {
-              return res.json({ err: err })
+              return res.statusCode(400).json({ err: err })
           }
           res.json({ tutor: response })
       });
@@ -70,8 +71,7 @@ var storage = multer.diskStorage({
  
 var upload = multer({ storage: storage })
 
-app.post("/addTutor", findByToken,upload.single('imgURL'), function(req, res) {
-  console.log("my image is *****",req.file)
+app.post("/addTutor",upload.single('imgURL'), function(req, res) {
   let tutor = new tutorCollection({ 
     _id: req.body._id,
     tName: req.body.tName,
@@ -101,7 +101,7 @@ app.post("/addTutor", findByToken,upload.single('imgURL'), function(req, res) {
       if (err) {
         return res.json({ success: false, err: err })
       }
-      res.json({ success: true, data: user })
+      res.json({ success: true, user })
     });
 })
 

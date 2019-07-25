@@ -1,6 +1,6 @@
 var app = require('express').Router();
 var proposalCollection = require('../models/proposalSchema');
-
+var getByToken = require('../middlewares/verifytoken');
 
 app.post('/deleteProposal', (req, res) => {
   proposalCollection
@@ -42,7 +42,7 @@ app.post('/updateProposal', (req, res) => {
       });
 })
 
-app.post("/addProposal", function(req, res) {
+app.post("/addProposal", getByToken, function(req, res) {
   let proposal = new proposalCollection({ 
     _id: req.body._id,
     tutorID: req.body.tutorID,
@@ -52,11 +52,11 @@ app.post("/addProposal", function(req, res) {
   });
   
     proposal
-    .save((err, user) => {
+    .save((err, proposal) => {
       if (err) {
         return res.json({ success: false, err: err })
       }
-      res.json({ success: true, data: user })
+      res.json({ success: true, proposal })
     });
 })
 

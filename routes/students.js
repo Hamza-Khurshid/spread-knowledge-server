@@ -1,6 +1,6 @@
 var app = require('express').Router();
 var studentCollection = require('../models/studentSchema');
-
+var findByToken = require('../middlewares/verifytoken');
 
 app.post('/deleteStudent', (req, res) => {
   studentCollection
@@ -24,7 +24,7 @@ app.post('/getStudent', (req, res) => {
       });
 })
 
-app.post('/updateStudent', (req, res) => {
+app.post('/updateStudent', findByToken, (req, res) => {
   studentCollection
       .findOneAndUpdate(
         {_id: req.body._id},
@@ -39,7 +39,7 @@ app.post('/updateStudent', (req, res) => {
           subject1: req.body.subject1,
           subject2: req.body.subject2,
           subject3: req.body.subject3
-        })
+        }, {new: true})
       .exec(function (err, response) {
           if (err) {
               return res.json({ err: err })
@@ -68,7 +68,7 @@ app.post("/addStudent", function(req, res) {
       if (err) {
         return res.json({ success: false, err: err })
       }
-      res.json({ success: true, data: user })
+      res.json({ success: true, user })
     });
 })
 

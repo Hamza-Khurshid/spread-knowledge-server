@@ -8,6 +8,7 @@ const Tutor = new Schema({
     tPassword: String,
     imgURL: String,
     tGender: String,
+    tAbout: String,
     tPhone: String,
     tCity: String,
     tAddress: String,
